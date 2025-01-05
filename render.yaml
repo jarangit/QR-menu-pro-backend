@@ -1,0 +1,32 @@
+services:
+  # NestJS Web Application
+  - type: web
+    name: nestjs-app
+    env: node
+    branch: main
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm run start:prod
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        value: mysql://mcs_user:1234@mysql-service:3306/mcs_db
+   
+
+  # MySQL Database Service
+  - type: pserv
+    name: mysql-service
+    env: docker
+    dockerfilePath: ./mysql.Dockerfile  # ใช้ Dockerfile สำหรับ MySQL
+    plan: free
+    envVars:
+      - key: MYSQL_ROOT_PASSWORD
+        value: root
+      - key: MYSQL_DATABASE
+        value: mcs_db
+      - key: MYSQL_USER
+        value: mcs_user
+      - key: MYSQL_PASSWORD
+        value: 1234
+  
